@@ -4,18 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Мега-калькулятор обоев + клей</title>
+  <!-- Подключаем шрифты и иконки -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Манифест PWA -->
+  <link rel="manifest" href="manifest.json">
   <style>
-    /* Все стили как в предыдущей версии, добавляем новые классы */
+    /* --- Все стили (точно такие же, как в последней версии) --- */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: 'Inter', sans-serif;
     }
-
     body {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
@@ -25,12 +26,10 @@
       padding: 16px;
       animation: fadeIn 0.5s ease;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-
     .calculator {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
@@ -41,7 +40,6 @@
       padding: 32px;
       animation: slideUp 0.6s ease;
     }
-
     @keyframes slideUp {
       from {
         opacity: 0;
@@ -52,7 +50,6 @@
         transform: translateY(0);
       }
     }
-
     h2 {
       color: #2d3748;
       font-size: 28px;
@@ -61,17 +58,14 @@
       align-items: center;
       gap: 12px;
     }
-
     h2 i {
       color: #667eea;
     }
-
     .subtitle {
       color: #4a5568;
       margin-bottom: 24px;
       font-size: 16px;
     }
-
     .section {
       background: #f7fafc;
       border-radius: 16px;
@@ -80,11 +74,9 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       transition: box-shadow 0.3s;
     }
-
     .section:hover {
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-
     .section h3 {
       color: #2c3e50;
       font-size: 18px;
@@ -93,11 +85,9 @@
       align-items: center;
       gap: 8px;
     }
-
     .section h3 i {
       color: #667eea;
     }
-
     .room-scheme {
       background: white;
       border-radius: 16px;
@@ -106,7 +96,6 @@
       text-align: center;
       border: 2px dashed #a0aec0;
     }
-
     .room-rect {
       display: inline-block;
       position: relative;
@@ -116,7 +105,6 @@
       background: #f7fafc;
       margin: 10px;
     }
-
     .wall-label {
       position: absolute;
       background: #667eea;
@@ -126,19 +114,16 @@
       font-size: 12px;
       font-weight: 600;
     }
-
     .wall-top { top: -20px; left: 50%; transform: translateX(-50%); }
     .wall-bottom { bottom: -20px; left: 50%; transform: translateX(-50%); }
     .wall-left { left: -20px; top: 50%; transform: translateY(-50%); }
     .wall-right { right: -20px; top: 50%; transform: translateY(-50%); }
-
     .wallpaper-preview {
       display: flex;
       gap: 16px;
       margin-top: 16px;
       flex-wrap: wrap;
     }
-
     .preview-item {
       flex: 1;
       min-width: 80px;
@@ -151,28 +136,23 @@
       background-position: center;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
-
     .preview-item:hover {
       transform: scale(1.05);
       box-shadow: 0 10px 15px rgba(0,0,0,0.2);
     }
-
     .preview-item.selected {
       border-color: #667eea;
       box-shadow: 0 0 0 3px rgba(102,126,234,0.3);
     }
-
     .pattern1 { background: repeating-linear-gradient(45deg, #d4af37, #d4af37 10px, #f5e7c8 10px, #f5e7c8 20px); }
     .pattern2 { background: radial-gradient(circle at 30% 30%, #b19cd9, #b19cd9 10px, #e6d9ff 10px); }
     .pattern3 { background: linear-gradient(90deg, #a3bffa 20%, #c3dafe 20%, #c3dafe 40%, #a3bffa 40%, #a3bffa 60%, #c3dafe 60%, #c3dafe 80%, #a3bffa 80%); }
-
     .waste-indicator {
       display: flex;
       align-items: center;
       gap: 16px;
       margin-top: 16px;
     }
-
     .progress-bar {
       flex: 1;
       height: 20px;
@@ -180,18 +160,15 @@
       border-radius: 20px;
       overflow: hidden;
     }
-
     .progress-fill {
       height: 100%;
       background: linear-gradient(90deg, #48bb78, #38a169);
       width: 0%;
       transition: width 0.3s;
     }
-
     .form-group {
       margin-bottom: 16px;
     }
-
     .form-group label {
       display: block;
       color: #4a5568;
@@ -199,7 +176,6 @@
       font-weight: 500;
       margin-bottom: 8px;
     }
-
     input, select {
       width: 100%;
       padding: 10px 14px;
@@ -210,27 +186,23 @@
       background: white;
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
     }
-
     input:focus, select:focus {
       outline: none;
       border-color: #667eea;
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2), inset 0 2px 4px rgba(0,0,0,0.05);
     }
-
     .walls-container {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
       margin-top: 8px;
     }
-
     .wall-item {
       background: white;
       padding: 12px;
       border-radius: 12px;
       border: 1px solid #e2e8f0;
     }
-
     .window-item, .door-item {
       background: white;
       padding: 16px;
@@ -243,17 +215,14 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.02);
       border: 1px solid #e2e8f0;
     }
-
     .window-item label, .door-item label {
       width: 100%;
       margin-bottom: 8px;
       color: #2d3748;
     }
-
     .window-item input, .door-item input {
       width: calc(50% - 8px);
     }
-
     .remove-btn {
       background: #fed7d7;
       color: #97266d;
@@ -269,12 +238,10 @@
       gap: 4px;
       margin-left: auto;
     }
-
     .remove-btn:hover {
       background: #fcb5b5;
       transform: scale(1.05);
     }
-
     .add-btn {
       background: #c6f6d5;
       color: #22543d;
@@ -293,19 +260,16 @@
       margin-top: 8px;
       border: 1px solid #9ae6b4;
     }
-
     .add-btn:hover {
       background: #9ae6b4;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-
     .wallpaper-presets {
       display: flex;
       gap: 12px;
       margin-bottom: 20px;
     }
-
     .wallpaper-presets button {
       flex: 1;
       padding: 10px;
@@ -322,26 +286,22 @@
       gap: 6px;
       color: #2d3748;
     }
-
     .wallpaper-presets button:hover {
       background: #e2e8f0;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     }
-
     .tooltip-icon {
       color: #667eea;
       margin-left: 6px;
       cursor: help;
       font-size: 14px;
     }
-
     .button-group {
       display: flex;
       gap: 12px;
       margin-bottom: 24px;
     }
-
     .button-group button {
       flex: 1;
       padding: 14px;
@@ -356,27 +316,22 @@
       justify-content: center;
       gap: 8px;
     }
-
     #calculate {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
     }
-
     #calculate:hover {
       transform: translateY(-2px);
       box-shadow: 0 20px 30px -10px rgba(102,126,234,0.5);
     }
-
     #clear {
       background: #e2e8f0;
       color: #2d3748;
     }
-
     #clear:hover {
       background: #cbd5e0;
       transform: translateY(-2px);
     }
-
     .result {
       text-align: center;
       padding: 24px;
@@ -392,19 +347,16 @@
       flex-wrap: wrap;
       margin-bottom: 16px;
     }
-
     .result i {
       font-size: 32px;
       color: #5a67d8;
     }
-
     #rollsCount {
       font-weight: 800;
       color: #434190;
       font-size: 36px;
       margin-left: 8px;
     }
-
     #totalPrice {
       font-weight: 700;
       color: #2c3e50;
@@ -412,7 +364,6 @@
       width: 100%;
       margin-top: 8px;
     }
-
     #glueResult {
       font-weight: 600;
       color: #2b6cb0;
@@ -420,7 +371,6 @@
       width: 100%;
       margin-top: 8px;
     }
-
     .copy-btn, .share-btn {
       background: #667eea;
       color: white;
@@ -438,42 +388,33 @@
       width: 100%;
       margin-top: 8px;
     }
-
     .share-btn {
       background: #38a169;
     }
-
     .share-btn:hover {
       background: #2f855a;
     }
-
     .copy-btn:hover {
       background: #5a67d8;
     }
-
     @media (max-width: 600px) {
       .calculator {
         padding: 20px;
       }
-      
       .walls-container {
         grid-template-columns: 1fr;
       }
-      
       .wallpaper-presets {
         flex-direction: column;
       }
-      
       .window-item input, .door-item input {
         width: 100%;
       }
-      
       .remove-btn {
         margin-left: 0;
         width: 100%;
         justify-content: center;
       }
-      
       .button-group {
         flex-direction: column;
       }
@@ -583,7 +524,7 @@
         <input type="number" id="waste" step="1" value="5">
       </div>
 
-      <!-- НОВОЕ: Калькулятор клея -->
+      <!-- Калькулятор клея -->
       <div class="form-group">
         <label>
           <i class="fas fa-fill-drip"></i> Расход клея (м² на пачку):
@@ -634,7 +575,7 @@
       const pattern = document.getElementById('pattern');
       const price = document.getElementById('price');
       const waste = document.getElementById('waste');
-      const glueCoverage = document.getElementById('glueCoverage'); // новое поле
+      const glueCoverage = document.getElementById('glueCoverage');
       const calculateBtn = document.getElementById('calculate');
       const clearBtn = document.getElementById('clear');
       const copyBtn = document.getElementById('copyResult');
@@ -751,7 +692,7 @@
           pattern: pattern.value,
           price: price.value,
           waste: waste.value,
-          glueCoverage: glueCoverage.value, // сохраняем клей
+          glueCoverage: glueCoverage.value,
           selectedPattern: selectedPattern
         };
         
@@ -800,7 +741,7 @@
             if (data.pattern) pattern.value = data.pattern;
             if (data.price) price.value = data.price;
             if (data.waste) waste.value = data.waste;
-            if (data.glueCoverage) glueCoverage.value = data.glueCoverage; // загружаем клей
+            if (data.glueCoverage) glueCoverage.value = data.glueCoverage;
             
             if (data.selectedPattern) {
               selectedPattern = data.selectedPattern;
@@ -925,7 +866,6 @@
         if (полотенИзРулона < 1) полотенИзРулона = 1;
         
         let рулонов = Math.ceil(полотенВсего / полотенИзРулона);
-        const originalRolls = рулонов;
         рулонов = Math.ceil(рулонов * (1 + wastePercent));
         
         rollsCountSpan.textContent = рулонов;
@@ -965,7 +905,7 @@
         pattern.value = '0';
         price.value = '0';
         waste.value = '5';
-        glueCoverage.value = '30'; // сброс клея
+        glueCoverage.value = '30';
         
         windowsContainer.innerHTML = '';
         addWindow(1.5, 1.5);
@@ -1009,11 +949,8 @@
           navigator.share({
             title: 'Расчёт обоев',
             text: text,
-          }).catch(() => {
-            // если пользователь отменил, ничего не делаем
-          });
+          }).catch(() => {});
         } else {
-          // если Web Share не поддерживается, копируем в буфер
           copyResult();
         }
       }
@@ -1065,6 +1002,13 @@
       renderWalls();
       setTimeout(loadFromStorage, 100);
     })();
+  </script>
+
+  <!-- Регистрация Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
   </script>
 </body>
 </html>
