@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мега-калькулятор обоев + клей</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Все стили как в предыдущей версии, добавляем новые классы */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .calculator {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+      max-width: 900px;
+      width: 100%;
+      padding: 32px;
+      animation: slideUp 0.6s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      color: #2d3748;
+      font-size: 28px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    h2 i {
+      color: #667eea;
+    }
+
+    .subtitle {
+      color: #4a5568;
+      margin-bottom: 24px;
+      font-size: 16px;
+    }
+
+    .section {
+      background: #f7fafc;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: box-shadow 0.3s;
+    }
+
+    .section:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .section h3 {
+      color: #2c3e50;
+      font-size: 18px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section h3 i {
+      color: #667eea;
+    }
+
+    .room-scheme {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+      border: 2px dashed #a0aec0;
+    }
+
+    .room-rect {
+      display: inline-block;
+      position: relative;
+      width: 200px;
+      height: 150px;
+      border: 3px solid #4a5568;
+      background: #f7fafc;
+      margin: 10px;
+    }
+
+    .wall-label {
+      position: absolute;
+      background: #667eea;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .wall-top { top: -20px; left: 50%; transform: translateX(-50%); }
+    .wall-bottom { bottom: -20px; left: 50%; transform: translateX(-50%); }
+    .wall-left { left: -20px; top: 50%; transform: translateY(-50%); }
+    .wall-right { right: -20px; top: 50%; transform: translateY(-50%); }
+
+    .wallpaper-preview {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .preview-item {
+      flex: 1;
+      min-width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 3px solid transparent;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .preview-item:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+    }
+
+    .preview-item.selected {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.3);
+    }
+
+    .pattern1 { background: repeating-linear-gradient(45deg, #d4af37, #d4af37 10px, #f5e7c8 10px, #f5e7c8 20px); }
+    .pattern2 { background: radial-gradient(circle at 30% 30%, #b19cd9, #b19cd9 10px, #e6d9ff 10px); }
+    .pattern3 { background: linear-gradient(90deg, #a3bffa 20%, #c3dafe 20%, #c3dafe 40%, #a3bffa 40%, #a3bffa 60%, #c3dafe 60%, #c3dafe 80%, #a3bffa 80%); }
+
+    .waste-indicator {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 20px;
+      background: #e2e8f0;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #48bb78, #38a169);
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #4a5568;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s;
+      background: white;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2), inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .walls-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .wall-item {
+      background: white;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .window-item, .door-item {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      border: 1px solid #e2e8f0;
+    }
+
+    .window-item label, .door-item label {
+      width: 100%;
+      margin-bottom: 8px;
+      color: #2d3748;
+    }
+
+    .window-item input, .door-item input {
+      width: calc(50% - 8px);
+    }
+
+    .remove-btn {
+      background: #fed7d7;
+      color: #97266d;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .remove-btn:hover {
+      background: #fcb5b5;
+      transform: scale(1.05);
+    }
+
+    .add-btn {
+      background: #c6f6d5;
+      color: #22543d;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      margin-top: 8px;
+      border: 1px solid #9ae6b4;
+    }
+
+    .add-btn:hover {
+      background: #9ae6b4;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .wallpaper-presets {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .wallpaper-presets button {
+      flex: 1;
+      padding: 10px;
+      background: #edf2f7;
+      border: 1px solid #cbd5e0;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: #2d3748;
+    }
+
+    .wallpaper-presets button:hover {
+      background: #e2e8f0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .tooltip-icon {
+      color: #667eea;
+      margin-left: 6px;
+      cursor: help;
+      font-size: 14px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .button-group button {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    #calculate {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    #calculate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 30px -10px rgba(102,126,234,0.5);
+    }
+
+    #clear {
+      background: #e2e8f0;
+      color: #2d3748;
+    }
+
+    #clear:hover {
+      background: #cbd5e0;
+      transform: translateY(-2px);
+    }
+
+    .result {
+      text-align: center;
+      padding: 24px;
+      background: linear-gradient(135deg, #ebf8ff 0%, #d6e4ff 100%);
+      border-radius: 16px;
+      font-size: 20px;
+      color: #2c3e50;
+      border: 2px solid #a3bffa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .result i {
+      font-size: 32px;
+      color: #5a67d8;
+    }
+
+    #rollsCount {
+      font-weight: 800;
+      color: #434190;
+      font-size: 36px;
+      margin-left: 8px;
+    }
+
+    #totalPrice {
+      font-weight: 700;
+      color: #2c3e50;
+      font-size: 24px;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    #glueResult {
+      font-weight: 600;
+      color: #2b6cb0;
+      font-size: 20px;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .copy-btn, .share-btn {
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .share-btn {
+      background: #38a169;
+    }
+
+    .share-btn:hover {
+      background: #2f855a;
+    }
+
+    .copy-btn:hover {
+      background: #5a67d8;
+    }
+
+    @media (max-width: 600px) {
+      .calculator {
+        padding: 20px;
+      }
+      
+      .walls-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .wallpaper-presets {
+        flex-direction: column;
+      }
+      
+      .window-item input, .door-item input {
+        width: 100%;
+      }
+      
+      .remove-btn {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h2><i class="fas fa-paint-roller"></i> Калькулятор обоев + клей</h2>
+    <p class="subtitle">Точный расчёт с раскроем, клеем и возможностью поделиться</p>
+
+    <!-- Схема комнаты -->
+    <div class="section">
+      <h3><i class="fas fa-draw-polygon"></i> Схема комнаты</h3>
+      <div class="room-scheme" id="roomScheme">
+        <div class="room-rect" id="roomRect">
+          <span class="wall-label wall-top" id="wallTopLabel">5.0 м</span>
+          <span class="wall-label wall-bottom" id="wallBottomLabel">5.0 м</span>
+          <span class="wall-label wall-left" id="wallLeftLabel">4.0 м</span>
+          <span class="wall-label wall-right" id="wallRightLabel">4.0 м</span>
+        </div>
+        <p style="margin-top: 10px; color: #4a5568;">Стены: <span id="perimeterDisplay">18.0 м</span></p>
+      </div>
+    </div>
+
+    <!-- Форма комнаты -->
+    <div class="section">
+      <h3><i class="fas fa-shapes"></i> Форма комнаты</h3>
+      <div class="form-group">
+        <label>Тип комнаты:</label>
+        <select id="roomShape">
+          <option value="rect">🏠 Прямоугольная (4 стены)</option>
+          <option value="square">⬛ Квадратная (одна сторона)</option>
+          <option value="lshape">📐 Г-образная (до 6 стен)</option>
+        </select>
+      </div>
+      
+      <div id="wallsInput"></div>
+      
+      <div class="form-group">
+        <label><i class="fas fa-arrow-up"></i> Высота потолка (м):</label>
+        <input type="number" id="height" step="0.01" value="2.5">
+      </div>
+    </div>
+
+    <!-- Окна и двери -->
+    <div class="section">
+      <h3><i class="fas fa-window-maximize"></i> Окна и двери</h3>
+      
+      <div id="windows-container">
+        <div class="window-item">
+          <label>Окно (ширина × высота, м):</label>
+          <input type="number" class="window-width" step="0.01" value="1.5" placeholder="Ширина">
+          <input type="number" class="window-height" step="0.01" value="1.5" placeholder="Высота">
+        </div>
+      </div>
+      <button id="add-window" class="add-btn"><i class="fas fa-plus-circle"></i> Добавить окно</button>
+
+      <div id="doors-container" style="margin-top: 16px;">
+        <div class="door-item">
+          <label>Дверь (ширина × высота, м):</label>
+          <input type="number" class="door-width" step="0.01" value="0.9" placeholder="Ширина">
+          <input type="number" class="door-height" step="0.01" value="2.0" placeholder="Высота">
+        </div>
+      </div>
+      <button id="add-door" class="add-btn"><i class="fas fa-plus-circle"></i> Добавить дверь</button>
+    </div>
+
+    <!-- Параметры обоев + раппорт + цена + превью + клей -->
+    <div class="section">
+      <h3><i class="fas fa-scroll"></i> Параметры обоев и клея</h3>
+      
+      <!-- Превью обоев -->
+      <div class="wallpaper-preview">
+        <div class="preview-item pattern1" data-pattern="1" title="Золотистый узор"></div>
+        <div class="preview-item pattern2" data-pattern="2" title="Фиолетовые круги"></div>
+        <div class="preview-item pattern3" data-pattern="3" title="Синие полоски"></div>
+      </div>
+      
+      <div class="wallpaper-presets">
+        <button id="presetStandard"><i class="fas fa-arrows-alt-h"></i> 0.53м x 10м</button>
+        <button id="presetMeter"><i class="fas fa-arrows-alt-h"></i> 1.06м x 10м</button>
+      </div>
+      
+      <div class="form-group">
+        <label>Длина рулона (м): <span class="tooltip-icon" title="Обычно 10 или 25 метров">ⓘ</span></label>
+        <input type="number" id="rollLength" step="0.01" value="10">
+      </div>
+      
+      <div class="form-group">
+        <label>Ширина рулона (м): <span class="tooltip-icon" title="Стандарт: 0.53 м (узкие) или 1.06 м (широкие)">ⓘ</span></label>
+        <input type="number" id="rollWidth" step="0.01" value="0.53">
+      </div>
+      
+      <div class="form-group">
+        <label>Раппорт (см): <span class="tooltip-icon" title="Шаг рисунка. Если рисунок не нужно подгонять, ставьте 0">ⓘ</span></label>
+        <input type="number" id="pattern" step="1" value="0">
+      </div>
+      
+      <div class="form-group">
+        <label>Цена за рулон (руб):</label>
+        <input type="number" id="price" step="10" value="0">
+      </div>
+      
+      <div class="form-group">
+        <label>Запас (%): <span class="tooltip-icon" title="Добавочный процент на брак и подрезку">ⓘ</span></label>
+        <input type="number" id="waste" step="1" value="5">
+      </div>
+
+      <!-- НОВОЕ: Калькулятор клея -->
+      <div class="form-group">
+        <label>
+          <i class="fas fa-fill-drip"></i> Расход клея (м² на пачку):
+          <span class="tooltip-icon" title="Смотрите на упаковке клея — сколько квадратных метров покрывает одна пачка">ⓘ</span>
+        </label>
+        <input type="number" id="glueCoverage" step="0.1" value="30" placeholder="например, 30 м²/пачка">
+        <small style="color: #718096; display: block; margin-top: 4px;">
+          <i class="fas fa-info-circle"></i> Указано на упаковке клея
+        </small>
+      </div>
+      
+      <!-- Индикатор запаса -->
+      <div class="waste-indicator">
+        <span style="font-weight: 500;">Запас:</span>
+        <div class="progress-bar">
+          <div class="progress-fill" id="wasteProgress" style="width: 5%;"></div>
+        </div>
+        <span id="wastePercentDisplay">5%</span>
+      </div>
+    </div>
+
+    <!-- Кнопки действий -->
+    <div class="button-group">
+      <button id="calculate"><i class="fas fa-calculator"></i> Рассчитать</button>
+      <button id="clear"><i class="fas fa-undo-alt"></i> Очистить</button>
+    </div>
+
+    <!-- Результат -->
+    <div class="result" id="result">
+      <i class="fas fa-roll"></i> Вам потребуется: <span id="rollsCount">—</span> рулонов
+      <div id="totalPrice"></div>
+      <div id="glueResult"></div>
+    </div>
+    
+    <!-- Кнопки поделиться и скопировать -->
+    <button class="share-btn" id="shareBtn"><i class="fas fa-share-alt"></i> Поделиться</button>
+    <button class="copy-btn" id="copyResult"><i class="fas fa-copy"></i> Скопировать результат</button>
+  </div>
+
+  <script>
+    (function() {
+      // ---------- Элементы ----------
+      const roomShape = document.getElementById('roomShape');
+      const wallsInputDiv = document.getElementById('wallsInput');
+      const height = document.getElementById('height');
+      const rollLength = document.getElementById('rollLength');
+      const rollWidth = document.getElementById('rollWidth');
+      const pattern = document.getElementById('pattern');
+      const price = document.getElementById('price');
+      const waste = document.getElementById('waste');
+      const glueCoverage = document.getElementById('glueCoverage'); // новое поле
+      const calculateBtn = document.getElementById('calculate');
+      const clearBtn = document.getElementById('clear');
+      const copyBtn = document.getElementById('copyResult');
+      const shareBtn = document.getElementById('shareBtn');
+      const rollsCountSpan = document.getElementById('rollsCount');
+      const totalPriceDiv = document.getElementById('totalPrice');
+      const glueResultDiv = document.getElementById('glueResult');
+      const wasteProgress = document.getElementById('wasteProgress');
+      const wastePercentDisplay = document.getElementById('wastePercentDisplay');
+      const perimeterDisplay = document.getElementById('perimeterDisplay');
+      
+      const wallTopLabel = document.getElementById('wallTopLabel');
+      const wallBottomLabel = document.getElementById('wallBottomLabel');
+      const wallLeftLabel = document.getElementById('wallLeftLabel');
+      const wallRightLabel = document.getElementById('wallRightLabel');
+      const roomRect = document.getElementById('roomRect');
+
+      const windowsContainer = document.getElementById('windows-container');
+      const doorsContainer = document.getElementById('doors-container');
+
+      let selectedPattern = 1;
+      document.querySelectorAll('.preview-item').forEach(item => {
+        item.addEventListener('click', () => {
+          document.querySelectorAll('.preview-item').forEach(i => i.classList.remove('selected'));
+          item.classList.add('selected');
+          selectedPattern = item.dataset.pattern;
+        });
+      });
+      document.querySelector('.preview-item').classList.add('selected');
+
+      let wallCount = 4;
+
+      function renderWalls() {
+        const shape = roomShape.value;
+        let html = '';
+        
+        if (shape === 'square') {
+          wallCount = 1;
+          html = `
+            <div class="form-group">
+              <label>Длина стены (м):</label>
+              <input type="number" id="wall1" class="wall-input" step="0.01" value="5">
+            </div>
+          `;
+        } else if (shape === 'rect') {
+          wallCount = 4;
+          html = '<div class="walls-container">';
+          for (let i = 1; i <= 4; i++) {
+            html += `
+              <div class="wall-item">
+                <label>Стена ${i} (м):</label>
+                <input type="number" id="wall${i}" class="wall-input" step="0.01" value="${i % 2 === 0 ? 5 : 4}">
+              </div>
+            `;
+          }
+          html += '</div>';
+        } else if (shape === 'lshape') {
+          wallCount = 6;
+          html = '<div class="walls-container">';
+          for (let i = 1; i <= 6; i++) {
+            html += `
+              <div class="wall-item">
+                <label>Стена ${i} (м):</label>
+                <input type="number" id="wall${i}" class="wall-input" step="0.01" value="3">
+              </div>
+            `;
+          }
+          html += '</div>';
+        }
+        wallsInputDiv.innerHTML = html;
+        
+        if (shape === 'rect') {
+          roomRect.style.display = 'inline-block';
+        } else {
+          roomRect.style.display = 'none';
+        }
+        
+        loadFromStorage();
+        updateScheme();
+      }
+
+      function updateScheme() {
+        if (roomShape.value === 'rect') {
+          const wall1 = parseFloat(document.getElementById('wall1')?.value) || 4;
+          const wall2 = parseFloat(document.getElementById('wall2')?.value) || 5;
+          const wall3 = parseFloat(document.getElementById('wall3')?.value) || 4;
+          const wall4 = parseFloat(document.getElementById('wall4')?.value) || 5;
+          
+          wallTopLabel.textContent = wall2.toFixed(1) + ' м';
+          wallBottomLabel.textContent = wall4.toFixed(1) + ' м';
+          wallLeftLabel.textContent = wall1.toFixed(1) + ' м';
+          wallRightLabel.textContent = wall3.toFixed(1) + ' м';
+          
+          const perimeter = wall1 + wall2 + wall3 + wall4;
+          perimeterDisplay.textContent = perimeter.toFixed(1) + ' м';
+        } else {
+          let perimeter = 0;
+          document.querySelectorAll('.wall-input').forEach(input => {
+            perimeter += parseFloat(input.value) || 0;
+          });
+          perimeterDisplay.textContent = perimeter.toFixed(1) + ' м';
+        }
+      }
+
+      function saveToStorage() {
+        const data = {
+          roomShape: roomShape.value,
+          walls: {},
+          height: height.value,
+          windows: [],
+          doors: [],
+          rollLength: rollLength.value,
+          rollWidth: rollWidth.value,
+          pattern: pattern.value,
+          price: price.value,
+          waste: waste.value,
+          glueCoverage: glueCoverage.value, // сохраняем клей
+          selectedPattern: selectedPattern
+        };
+        
+        document.querySelectorAll('.wall-input').forEach((input, index) => {
+          data.walls[`wall${index+1}`] = input.value;
+        });
+        
+        document.querySelectorAll('.window-item').forEach(item => {
+          const w = item.querySelector('.window-width')?.value;
+          const h = item.querySelector('.window-height')?.value;
+          if (w && h) data.windows.push({ width: w, height: h });
+        });
+        
+        document.querySelectorAll('.door-item').forEach(item => {
+          const w = item.querySelector('.door-width')?.value;
+          const h = item.querySelector('.door-height')?.value;
+          if (w && h) data.doors.push({ width: w, height: h });
+        });
+        
+        localStorage.setItem('wallpaperCalc', JSON.stringify(data));
+      }
+
+      function loadFromStorage() {
+        const saved = localStorage.getItem('wallpaperCalc');
+        if (!saved) return;
+        
+        try {
+          const data = JSON.parse(saved);
+          
+          if (data.roomShape) {
+            roomShape.value = data.roomShape;
+            renderWalls();
+          }
+          
+          setTimeout(() => {
+            if (data.walls) {
+              document.querySelectorAll('.wall-input').forEach((input, index) => {
+                const key = `wall${index+1}`;
+                if (data.walls[key]) input.value = data.walls[key];
+              });
+            }
+            
+            if (data.height) height.value = data.height;
+            if (data.rollLength) rollLength.value = data.rollLength;
+            if (data.rollWidth) rollWidth.value = data.rollWidth;
+            if (data.pattern) pattern.value = data.pattern;
+            if (data.price) price.value = data.price;
+            if (data.waste) waste.value = data.waste;
+            if (data.glueCoverage) glueCoverage.value = data.glueCoverage; // загружаем клей
+            
+            if (data.selectedPattern) {
+              selectedPattern = data.selectedPattern;
+              document.querySelectorAll('.preview-item').forEach(item => {
+                item.classList.toggle('selected', item.dataset.pattern == selectedPattern);
+              });
+            }
+            
+            windowsContainer.innerHTML = '';
+            if (data.windows && data.windows.length > 0) {
+              data.windows.forEach(win => {
+                addWindow(win.width, win.height);
+              });
+            } else {
+              addWindow(1.5, 1.5);
+            }
+            
+            doorsContainer.innerHTML = '';
+            if (data.doors && data.doors.length > 0) {
+              data.doors.forEach(door => {
+                addDoor(door.width, door.height);
+              });
+            } else {
+              addDoor(0.9, 2.0);
+            }
+            
+            updateScheme();
+            calculateRolls();
+          }, 0);
+        } catch (e) {
+          console.error('Ошибка загрузки', e);
+        }
+      }
+
+      function addWindow(width = 1.5, height = 1.5) {
+        const item = document.createElement('div');
+        item.className = 'window-item';
+        item.innerHTML = `
+          <label>Окно (ширина × высота, м):</label>
+          <input type="number" class="window-width" step="0.01" value="${width}" placeholder="Ширина">
+          <input type="number" class="window-height" step="0.01" value="${height}" placeholder="Высота">
+          <button class="remove-btn"><i class="fas fa-trash"></i> Удалить</button>
+        `;
+        windowsContainer.appendChild(item);
+        item.querySelector('.remove-btn').addEventListener('click', () => {
+          item.remove();
+          saveToStorage();
+          calculateRolls();
+        });
+      }
+
+      function addDoor(width = 0.9, height = 2.0) {
+        const item = document.createElement('div');
+        item.className = 'door-item';
+        item.innerHTML = `
+          <label>Дверь (ширина × высота, м):</label>
+          <input type="number" class="door-width" step="0.01" value="${width}" placeholder="Ширина">
+          <input type="number" class="door-height" step="0.01" value="${height}" placeholder="Высота">
+          <button class="remove-btn"><i class="fas fa-trash"></i> Удалить</button>
+        `;
+        doorsContainer.appendChild(item);
+        item.querySelector('.remove-btn').addEventListener('click', () => {
+          item.remove();
+          saveToStorage();
+          calculateRolls();
+        });
+      }
+
+      function calculateRolls() {
+        let perimeter = 0;
+        document.querySelectorAll('.wall-input').forEach(input => {
+          perimeter += parseFloat(input.value) || 0;
+        });
+        
+        const h = parseFloat(height.value) || 0;
+        const wallsArea = perimeter * h;
+        
+        let windowsArea = 0;
+        document.querySelectorAll('.window-item').forEach(item => {
+          const w = parseFloat(item.querySelector('.window-width')?.value) || 0;
+          const wh = parseFloat(item.querySelector('.window-height')?.value) || 0;
+          windowsArea += w * wh;
+        });
+        
+        let doorsArea = 0;
+        document.querySelectorAll('.door-item').forEach(item => {
+          const dw = parseFloat(item.querySelector('.door-width')?.value) || 0;
+          const dh = parseFloat(item.querySelector('.door-height')?.value) || 0;
+          doorsArea += dw * dh;
+        });
+        
+        const netArea = wallsArea - windowsArea - doorsArea;
+        
+        if (netArea <= 0) {
+          rollsCountSpan.textContent = '0';
+          totalPriceDiv.innerHTML = '';
+          glueResultDiv.innerHTML = '';
+          return;
+        }
+        
+        const rollL = parseFloat(rollLength.value) || 0;
+        const rollW = parseFloat(rollWidth.value) || 0;
+        const patternM = (parseFloat(pattern.value) || 0) / 100;
+        const wastePercent = (parseFloat(waste.value) || 0) / 100;
+        const pricePerRoll = parseFloat(price.value) || 0;
+        
+        if (rollL <= 0 || rollW <= 0) {
+          rollsCountSpan.textContent = 'Ошибка';
+          totalPriceDiv.innerHTML = '';
+          glueResultDiv.innerHTML = '';
+          return;
+        }
+        
+        const полотенВсего = Math.ceil(perimeter / rollW);
+        
+        let длинаПолотна = h;
+        if (patternM > 0) {
+          длинаПолотна = Math.ceil(h / patternM) * patternM;
+        }
+        
+        let полотенИзРулона = Math.floor(rollL / длинаПолотна);
+        if (полотенИзРулона < 1) полотенИзРулона = 1;
+        
+        let рулонов = Math.ceil(полотенВсего / полотенИзРулона);
+        const originalRolls = рулонов;
+        рулонов = Math.ceil(рулонов * (1 + wastePercent));
+        
+        rollsCountSpan.textContent = рулонов;
+        
+        if (pricePerRoll > 0) {
+          const total = рулонов * pricePerRoll;
+          totalPriceDiv.innerHTML = `💰 Итого: ${total.toLocaleString()} руб.`;
+        } else {
+          totalPriceDiv.innerHTML = '';
+        }
+
+        // Расчёт клея
+        const gluePerPack = parseFloat(glueCoverage.value) || 0;
+        if (gluePerPack > 0 && netArea > 0) {
+          const gluePacks = Math.ceil(netArea / gluePerPack);
+          glueResultDiv.innerHTML = `🧴 Пачек клея: ${gluePacks}`;
+        } else {
+          glueResultDiv.innerHTML = '';
+        }
+        
+        const wasteValue = parseFloat(waste.value) || 0;
+        wasteProgress.style.width = wasteValue + '%';
+        wastePercentDisplay.textContent = wasteValue + '%';
+        
+        updateScheme();
+        saveToStorage();
+      }
+
+      function clearAll() {
+        document.querySelectorAll('.wall-input').forEach(input => {
+          input.value = input.id.includes('wall1') ? 4 : 5;
+        });
+        
+        height.value = '2.5';
+        rollLength.value = '10';
+        rollWidth.value = '0.53';
+        pattern.value = '0';
+        price.value = '0';
+        waste.value = '5';
+        glueCoverage.value = '30'; // сброс клея
+        
+        windowsContainer.innerHTML = '';
+        addWindow(1.5, 1.5);
+        
+        doorsContainer.innerHTML = '';
+        addDoor(0.9, 2.0);
+        
+        selectedPattern = 1;
+        document.querySelectorAll('.preview-item').forEach((item, idx) => {
+          item.classList.toggle('selected', idx === 0);
+        });
+        
+        localStorage.removeItem('wallpaperCalc');
+        updateScheme();
+        calculateRolls();
+      }
+
+      function copyResult() {
+        const rolls = rollsCountSpan.textContent;
+        const priceText = totalPriceDiv.innerText;
+        const glueText = glueResultDiv.innerText;
+        let text = `Нужно рулонов: ${rolls}`;
+        if (priceText) text += `\n${priceText}`;
+        if (glueText) text += `\n${glueText}`;
+        navigator.clipboard.writeText(text).then(() => {
+          alert('Результат скопирован!');
+        }).catch(() => {
+          alert('Не удалось скопировать');
+        });
+      }
+
+      function shareResult() {
+        const rolls = rollsCountSpan.textContent;
+        const priceText = totalPriceDiv.innerText;
+        const glueText = glueResultDiv.innerText;
+        let text = `Нужно рулонов: ${rolls}`;
+        if (priceText) text += `\n${priceText}`;
+        if (glueText) text += `\n${glueText}`;
+        
+        if (navigator.share) {
+          navigator.share({
+            title: 'Расчёт обоев',
+            text: text,
+          }).catch(() => {
+            // если пользователь отменил, ничего не делаем
+          });
+        } else {
+          // если Web Share не поддерживается, копируем в буфер
+          copyResult();
+        }
+      }
+
+      roomShape.addEventListener('change', () => {
+        renderWalls();
+        saveToStorage();
+        calculateRolls();
+      });
+
+      document.addEventListener('input', (e) => {
+        if (e.target.matches('input, select')) {
+          saveToStorage();
+          calculateRolls();
+        }
+      });
+
+      document.getElementById('add-window').addEventListener('click', () => {
+        addWindow(1.5, 1.5);
+        saveToStorage();
+        calculateRolls();
+      });
+
+      document.getElementById('add-door').addEventListener('click', () => {
+        addDoor(0.9, 2.0);
+        saveToStorage();
+        calculateRolls();
+      });
+
+      document.getElementById('presetStandard').addEventListener('click', () => {
+        rollLength.value = 10;
+        rollWidth.value = 0.53;
+        saveToStorage();
+        calculateRolls();
+      });
+
+      document.getElementById('presetMeter').addEventListener('click', () => {
+        rollLength.value = 10;
+        rollWidth.value = 1.06;
+        saveToStorage();
+        calculateRolls();
+      });
+
+      calculateBtn.addEventListener('click', calculateRolls);
+      clearBtn.addEventListener('click', clearAll);
+      copyBtn.addEventListener('click', copyResult);
+      shareBtn.addEventListener('click', shareResult);
+
+      renderWalls();
+      setTimeout(loadFromStorage, 100);
+    })();
+  </script>
+</body>
+</html>
